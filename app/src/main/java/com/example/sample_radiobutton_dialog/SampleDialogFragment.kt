@@ -19,11 +19,17 @@ internal class SampleDialogFragment : DialogFragment() {
 
     private var selectedId: Int = 0
 
+    private var listener: Listener? = null
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         arguments?.let {
             dataArrayList = it.getParcelableArrayList("data_array_list")
             selectedId = it.getInt("selected_id")
+        }
+
+        listener = activity?.let {
+            it as Listener
         }
     }
 
@@ -57,13 +63,21 @@ internal class SampleDialogFragment : DialogFragment() {
         }
 
         binding.negative.setOnClickListener {
+            listener?.onClickSampleDialogNegative(dialog)
             dismiss()
         }
 
         binding.positive.setOnClickListener {
+            listener?.onClickSampleDialogPositive(dialog, binding.radioGroup.checkedRadioButtonId)
+            dismiss()
         }
 
         return dialog
+    }
+
+    interface Listener {
+        fun onClickSampleDialogPositive(dialog: Dialog, id: Int)
+        fun onClickSampleDialogNegative(dialog: Dialog)
     }
 
     class Builder {
