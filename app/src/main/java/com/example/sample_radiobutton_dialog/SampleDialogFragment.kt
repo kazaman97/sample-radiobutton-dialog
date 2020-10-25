@@ -1,9 +1,12 @@
 package com.example.sample_radiobutton_dialog
 
+import android.app.ActionBar
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.example.sample_radiobutton_dialog.data.parcelable.SampleDataParcelable
@@ -36,6 +39,23 @@ internal class SampleDialogFragment : DialogFragment() {
         dialog.setContentView(view)
         isCancelable = false
 
+        dataArrayList?.forEach {
+            val radioButton = RadioButton(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ActionBar.LayoutParams.WRAP_CONTENT
+                )
+                id = it.id
+                text = it.title
+            }
+            val radioGroup = binding.radioGroup.apply {
+                addView(radioButton)
+            }
+            if (it.id == selectedId) {
+                radioGroup.check(selectedId)
+            }
+        }
+
         binding.negative.setOnClickListener {
             dismiss()
         }
@@ -46,7 +66,7 @@ internal class SampleDialogFragment : DialogFragment() {
         return dialog
     }
 
-    class Builder() {
+    class Builder {
         private var dataArrayList: ArrayList<SampleDataParcelable>? = null
 
         private var selectedId: Int = 0
